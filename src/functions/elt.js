@@ -12,24 +12,41 @@ function elt(type, attrs, ...children) {
   return node;
 }
 
+// Model: Leeres Board zeichnen
+let state = {
+  board: Array(6).fill('').map(el => Array(7).fill(''))
+};
+
+// View: Lade Board und fülle Werte ab
 function showBoard() {
   const board = document.querySelector(".board");
 
-  for (let i = 0; i < 42; i++) {
-    let field;
-    let zufall = Math.random(); // Zufallszahl zwischen 0 und 1
+  for (let row = 0; row < 6; row++) {
+    for (let col = 0; col < 7; col++) {
+      let wert = state.board[row][col];
+      let field;
 
-    //60-20-20 Split (Leer-Rot-Blau)
-    if (zufall < 0.2) {
-      let piece = elt("div", { class: "piece red" });
-      field = elt("div", { class: "field" }, piece);
-    } else if (zufall < 0.4) {
-      let piece = elt("div", { class: "piece blue" });
-      field = elt("div", { class: "field" }, piece);
-    } else {
-      field = elt("div", { class: "field" });
+      if (wert === "r") {
+        field = elt("div", { class: "field" }, elt("div", { class: "piece red" }));
+      } else if (wert === "b") {
+        field = elt("div", { class: "field" }, elt("div", { class: "piece blue" }));
+      } else {
+        field = elt("div", { class: "field" });
+      }
+
+      board.appendChild(field);
     }
-
-    board.appendChild(field);
   }
 }
+
+// Timer
+setInterval(() => {
+  let randomRow = Math.floor(Math.random() * 6);
+  let randomCol = Math.floor(Math.random() * 7);
+  let values = ['', 'r', 'b'];
+  let randomVal = values[Math.floor(Math.random() * 3)];
+
+  state.board[randomRow][randomCol] = randomVal;
+
+  showBoard();
+}, 1000);
