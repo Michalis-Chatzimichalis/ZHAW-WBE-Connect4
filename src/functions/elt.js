@@ -20,6 +20,7 @@ let state = {
 // View: Lade Board und fülle Werte ab
 function showBoard() {
   const board = document.querySelector(".board");
+  board.innerHTML = ""; //wegen Neuladung des Boards durch den Timer
 
   for (let row = 0; row < 6; row++) {
     for (let col = 0; col < 7; col++) {
