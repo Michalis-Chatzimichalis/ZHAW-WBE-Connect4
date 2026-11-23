@@ -1,30 +1,43 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <title>Vier gewinnt</title>
 
   <style>
-
     div {
       box-sizing: border-box;
+    }
+
+    .controls {
+      width: 84vw;
+      margin: 1vw auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: sans-serif;
+      font-size: 1.2rem;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
     }
 
     .board {
       width: 84vw;
       margin: auto;
       outline: 1px solid black;
-   }
+      display: flex;
+      flex-wrap: wrap;
+    }
 
     .board .field {
       border: 1px solid black;
       width: 12vw;
       height: 12vw;
-      display: none;
-    }
-
-    .board .field:first-child {
-      display: block;
+      cursor: pointer;
     }
 
     .board .field .piece {
@@ -39,15 +52,22 @@
     .board .field .red {
       background-color: red;
     }
-
   </style>
+
   <script src="functions/elt.js"></script>
-
 </head>
-<body>
 
-  <div class="board">
-    <script>showBoard()</script>
+<body>
+  <div class="controls">
+      <div id="status">Turn: Red</div>
+      <button id="newGameBtn">Neues Spiel</button>
+    </div>
+
+    <div class="board"></div>
+
+    <script>
+      initGame();
+    </script>
 
   </div>
 

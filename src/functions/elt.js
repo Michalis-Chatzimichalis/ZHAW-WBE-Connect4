@@ -12,15 +12,18 @@ function elt(type, attrs, ...children) {
   return node;
 }
 
-// Model: Leeres Board zeichnen
+// Model: Leeres Board zeichnen + Rot hat den ersten Turn
 let state = {
-  board: Array(6).fill('').map(el => Array(7).fill(''))
+  board: Array(6).fill('').map(el => Array(7).fill('')),
+  turn: 'r'
 };
 
 // View: Lade Board und fülle Werte ab
 function showBoard() {
   const board = document.querySelector(".board");
-  board.innerHTML = ""; //wegen Neuladung des Boards durch den Timer
+  const status = document.querySelector("#status");
+  status.textContent = (state.turn === 'r') ? "Turn: Red" : "Turn: Blue";
+  board.innerHTML = ""; // wegen Neuladung des Boards durch den Timer
 
   for (let row = 0; row < 6; row++) {
     for (let col = 0; col < 7; col++) {
@@ -35,19 +38,32 @@ function showBoard() {
         field = elt("div", { class: "field" });
       }
 
+      field.addEventListener("click", () => handleColumnClick(col));
+
       board.appendChild(field);
     }
   }
 }
 
-// Timer
-setInterval(() => {
-  let randomRow = Math.floor(Math.random() * 6);
-  let randomCol = Math.floor(Math.random() * 7);
-  let values = ['', 'r', 'b'];
-  let randomVal = values[Math.floor(Math.random() * 3)];
+// Von unten nach oben nach einem freien Feld suchen
+function handleColumnClick(col) {
+  for (let row = 5; row >= 0; row--) {
+    if (state.board[row][col] === '') {
+      state.board[row][col] = state.turn;
+      state.turn = (state.turn === 'r') ? 'b' : 'r';
+      showBoard();
+      return;
+    }
+  }
+}
 
-  state.board[randomRow][randomCol] = randomVal;
+function initGame() {
+  const newGameBtn = document.querySelector("#newGameBtn");
+  newGameBtn.addEventListener("click", () => {
+    state.board = Array(6).fill('').map(() => Array(7).fill(''));
+    state.turn = 'r';
+    showBoard();
+  });
 
   showBoard();
-}, 1000);
+}
