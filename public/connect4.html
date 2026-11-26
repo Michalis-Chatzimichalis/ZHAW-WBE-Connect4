@@ -154,6 +154,7 @@ function newGame () {
 }
 
 function connect4Winner(player, board) {
+  if (!board || board.length === 0) return false;
   const rows = board.length;
   const cols = board[0].length;
 

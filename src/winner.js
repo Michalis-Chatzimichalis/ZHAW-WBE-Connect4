@@ -1,4 +1,5 @@
 function connect4Winner(player, board) {
+  if (!board || board.length === 0) return false;
   const rows = board.length;
   const cols = board[0].length;
 
@@ -53,7 +54,4 @@ function connect4Winner(player, board) {
   return false;
 }
 
-// Export für Node.js / Jasmine
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = { connect4Winner };
-}
+export { connect4Winner };
