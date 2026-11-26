@@ -38,13 +38,31 @@ function initGame () {
 // 
 function showBoard () {
   let board = document.querySelector(".board")
+  let status = document.querySelector("#status")
+
+  if (status) {
+    status.textContent = (state.next === 'r') ? "Turn: Red" : "Turn: Blue"
+  }
 
   // first remove all fields
   while (board.firstChild) { board.removeChild(board.firstChild) }
 
-  // ...
-  // your implementation
-  // ...
+  for (let row = 0; row < 6; row++) {
+    for (let col = 0; col < 7; col++) {
+      let wert = state.board[row][col]
+      let field
+
+      if (wert === "r") {
+        field = elt("div", { class: "field", "data-col": col }, elt("div", { class: "piece red" }))
+      } else if (wert === "b") {
+        field = elt("div", { class: "field", "data-col": col }, elt("div", { class: "piece blue" }))
+      } else {
+        field = elt("div", { class: "field", "data-col": col })
+      }
+
+      board.appendChild(field)
+    }
+  }
 
   return board
 }
@@ -69,34 +87,59 @@ function elt (type, attrs, ...children) {
 //
 function attachEventHandler (board) {
   board.addEventListener("click", (e) => {
-    
-    // ...
-    // your implementation
-    // ...
-     
-    showBoard()
+    // Ermittelt das angeklickte .field (auch wenn direkt auf ein .piece geklickt wurde)
+    let field = e.target.closest(".field")
+    if (!field) return
+
+    let col = Number(field.getAttribute("data-col"))
+
+    // Von unten nach oben nach dem untersten freien Feld suchen
+    for (let row = 5; row >= 0; row--) {
+      if (state.board[row][col] === '') {
+        state.board[row][col] = state.next
+        state.next = (state.next === 'r') ? 'b' : 'r'
+        showBoard()
+        return
+      }
+    }
   })
 }
-
 
 //  Get current state from server and re-draw board
 //
 function loadState () {
-
-  // ...
-  // your implementation
-  // ...
+  fetch(SERVICE)
+    .then(response => response.json())
+    .then(data => {
+      state = data
+      showBoard()
+    })
 
 }
 
 //  Put current state to server
 //
 function saveState () {
+  fetch(SERVICE, {
+    method: 'PUT',
+    headers: { 'Content-type': 'application/json' },
+    body: JSON.stringify(state)
+  })
+}
 
-  // ...
-  // your implementation
-  // ...
-
+//  Reset game
+//
+function newGame () {
+  state.board = [
+    [ '', '', '', '', '', '', '' ],
+    [ '', '', '', '', '', '', '' ],
+    [ '', '', '', '', '', '', '' ],
+    [ '', '', '', '', '', '', '' ],
+    [ '', '', '', '', '', '', '' ],
+    [ '', '', '', '', '', '', '' ]
+  ]
+  state.next = 'b'
+  showBoard()
 }
 
   </script>
@@ -104,11 +147,14 @@ function saveState () {
 </head>
 <body>
 
+  <div id="status">Turn: Blue</div>
+
   <div class="board"></div>
   
   <div class="controls">
     <button onclick="loadState()">Load</button>
     <button onclick="saveState()">Save</button>
+    <button onclick="newGame()">New Game</button>
   </div>
 
   <script>

@@ -65,8 +65,20 @@ app.use(express.json())
 const apiKeys = ["wbeweb", "c4game"]
 
 //  unsere tolle in-memory Datenbank :)
-const data = { 1234567890: { demodata: "wbe is an inspiring challenge" } }
-
+const data = { 
+  1234567890: { demodata: "wbe is an inspiring challenge" },
+  c4state: {
+    board: [
+      [ '', '', '', '', '', '', '' ],
+      [ '', '', '', '', '', '', '' ],
+      [ '', '', '', '', '', '', '' ],
+      [ '', '', '', '', '', '', '' ],
+      [ '', '', '', '', '', '', '' ],
+      [ '', '', '', '', '', '', '' ]
+    ],
+    next: 'b'
+  }
+}
 //  GET-Request bearbeiten
 //
 app.get("/api/data/:id", function (req, res, next) {
